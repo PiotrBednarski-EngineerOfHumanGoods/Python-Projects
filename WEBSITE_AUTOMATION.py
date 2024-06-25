@@ -1,5 +1,9 @@
 import sys
 import webbrowser
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Dictionary of URLs categorized by 'work' and 'personal'
 URLS = {
@@ -7,21 +11,34 @@ URLS = {
     "personal": ["https://www.netflix.com", "https://www.spotify.com", "https://www.youtube.com"]
 }
 
-# Function to open a list of URLs in new browser tabs
 def open_webpages(urls):
+    """
+    Opens a list of URLs in new browser tabs.
+    
+    Args:
+    urls (list): List of URLs to open.
+    """
     for url in urls:
-        webbrowser.open_new_tab(url)  # Open each URL in a new browser tab
+        try:
+            webbrowser.open_new_tab(url)
+            logging.info(f"Opened {url}")
+        except Exception as e:
+            logging.error(f"Failed to open {url}: {e}")
 
-if __name__ == "__main__":
-    # Check if the script received exactly one argument and if it matches any key in URLS
+def main():
+    """
+    Main function to handle command-line arguments and open URLs.
+    """
     if len(sys.argv) != 2 or sys.argv[1] not in URLS:
         print("Usage: python WEBSITE_AUTOMATION.py <set_name>")
         print("Available sets:")
         for set_name in URLS.keys():
-            print(f"- {set_name}")  # Print available set names
-        sys.exit(1)  # Exit the script with a status code of 1 indicating an error
-
-    # Get the set name from the arguments and the corresponding URLs
+            print(f"- {set_name}")
+        sys.exit(1)
+    
     set_name = sys.argv[1]
     urls = URLS[set_name]
-    open_webpages(urls)  # Open the URLs in the browser
+    open_webpages(urls)
+
+if __name__ == "__main__":
+    main()
